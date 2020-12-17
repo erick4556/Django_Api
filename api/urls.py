@@ -2,13 +2,14 @@ from django.urls import path, include
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from .views import DocumentoViewSet
+from .views import DocumentoViewSet, CategoriaViewSet
 
 from .views import prueba
 
-# Para generar un endpoint para cada uno de los metodos
+# Para generar un endpoint para cada uno de los métodos
 router = routers.DefaultRouter()
 router.register("docs", DocumentoViewSet)
+router.register("categoria", CategoriaViewSet)
 
 urlpatterns = [
     # path("", prueba, name="prueba")
