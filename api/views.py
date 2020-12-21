@@ -3,8 +3,13 @@ from django.http import HttpResponse
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework import viewsets
-from .models import Documento, Categoria, SubCategoria
-from .serializer import DocumentoSerializer, CategoriaSerializer, SubCategoriaSerializer
+from .models import Documento, Categoria, SubCategoria, Producto
+from .serializer import (
+    DocumentoSerializer,
+    CategoriaSerializer,
+    SubCategoriaSerializer,
+    ProductoSerializer,
+)
 
 
 def prueba(reqest):
@@ -27,3 +32,9 @@ class SubCategoriaViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = SubCategoria.objects.all().order_by("descripcion")
     serializer_class = SubCategoriaSerializer
+
+
+class ProductoViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    queryset = Producto.objects.all().order_by("descripcion")
+    serializer_class = ProductoSerializer

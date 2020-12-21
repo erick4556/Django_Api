@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Documento, Categoria, SubCategoria
+from .models import Documento, Categoria, SubCategoria, Producto
 
 
 class DocumentoSerializer(serializers.ModelSerializer):
@@ -21,3 +21,19 @@ class SubCategoriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCategoria
         fields = ("id", "categoria", "descripcion", "cat_descripcion")
+
+
+class ProductoSerializer(serializers.ModelSerializer):
+    scat_descripcion = serializers.ReadOnlyField(source="subcategoria.descripcion")
+
+    class Meta:
+        model = Producto
+        fields = (
+            "id",
+            "codigo",
+            "descripcion",
+            "existencia",
+            "precio",
+            "subcategoria",
+            "scat_descripcion",
+        )
