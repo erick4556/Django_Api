@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Documento, Categoria
+from .models import Documento, Categoria, SubCategoria
 
 
 class DocumentoSerializer(serializers.ModelSerializer):
@@ -8,8 +8,16 @@ class DocumentoSerializer(serializers.ModelSerializer):
         model = Documento
         fields = "__all__"  # Se incluye todos los campos del modelo
 
+
 class CategoriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categoria
         fields = "__all__"  # Se incluye todos los campos del modelo
-        
+
+
+class SubCategoriaSerializer(serializers.ModelSerializer):
+    cat_descripcion = serializers.ReadOnlyField(source="categoria.descripcion")
+
+    class Meta:
+        model = SubCategoria
+        fields = ("id", "categoria", "descripcion", "cat_descripcion")

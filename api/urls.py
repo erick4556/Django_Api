@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from .views import DocumentoViewSet, CategoriaViewSet
+from .views import DocumentoViewSet, CategoriaViewSet, SubCategoriaViewSet
 
 from .views import prueba
 
@@ -10,6 +10,7 @@ from .views import prueba
 router = routers.DefaultRouter()
 router.register("docs", DocumentoViewSet)
 router.register("categoria", CategoriaViewSet)
+router.register("subcategoria", SubCategoriaViewSet)
 
 urlpatterns = [
     # path("", prueba, name="prueba")
