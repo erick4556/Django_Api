@@ -1,6 +1,18 @@
 from django.db import models
 
 
+class ModelEdit(models.Model):
+    # Para que se registre la fecha del servidor
+
+    # Este campo se afecta la primera vez que se cree
+    fc = models.DateTimeField(auto_now_add=True)
+    # Este campo se afecta en cada cambio que se haga
+    fm = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+
 class Documento(models.Model):
     nombre = models.CharField(max_length=50, null=False, blank=False, unique=True)
     expira = models.DateField()
@@ -70,3 +82,19 @@ class Producto(models.Model):
 
     class Meta:
         verbose_name_plural = "Productos"
+
+
+class Proveedor(models.Model):
+    nombre = models.CharField(max_length=50, null=False, blank=False, unique=True)
+    telefono = models.CharField(max_length=20, null=True, blank=True)
+    email = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+    def save(self, **kwargs):
+        self.nombre = self.nombre.upper()
+        super(Proveedor, self).save()
+
+    class Meta:
+        verbose_name_plural = "Proveedores"

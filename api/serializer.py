@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Documento, Categoria, SubCategoria, Producto
+from .models import Documento, Categoria, SubCategoria, Producto, Proveedor
 
 
 class DocumentoSerializer(serializers.ModelSerializer):
@@ -37,3 +37,9 @@ class ProductoSerializer(serializers.ModelSerializer):
             "subcategoria",
             "scat_descripcion",
         )
+
+
+class ProveedorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Proveedor
+        fields = "__all__"
