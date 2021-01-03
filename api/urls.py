@@ -8,6 +8,8 @@ from .views import (
     SubCategoriaViewSet,
     ProductoViewSet,
     ProveedorViewSet,
+    ComprasViewSet,
+    ComprasDetViewSet,
 )
 
 from .views import prueba
@@ -19,6 +21,8 @@ router.register("categoria", CategoriaViewSet)
 router.register("subcategoria", SubCategoriaViewSet)
 router.register("producto", ProductoViewSet)
 router.register("proveedor", ProveedorViewSet)
+router.register("compras", ComprasViewSet)
+router.register("compras-detalle", ComprasDetViewSet)
 
 urlpatterns = [
     # path("", prueba, name="prueba")

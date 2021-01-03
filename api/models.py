@@ -98,3 +98,42 @@ class Proveedor(models.Model):
 
     class Meta:
         verbose_name_plural = "Proveedores"
+
+
+class ComprasEnc(ModelEdit):
+    proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
+    fecha = models.DateField(null=False, blank=False)
+
+    def __str__(self):
+        return str(self.id)
+
+    class Meta:
+        verbose_name_plural = "Encabezados de Compras"
+
+
+class ComprasDet(ModelEdit):
+    cabecera = models.ForeignKey(
+        ComprasEnc, related_name="detalle", on_delete=models.CASCADE
+    )  # related_name para poder tener acceso al detalle desde el endpoint
+    producto = models.ForeignKey(Producto, on_delete=models.DO_NOTHING)
+    cantidad = models.IntegerField(default=0)
+    precio = models.FloatField(default=0)
+
+    # decorador
+    @property
+    def subtotal(self):
+        return self.cantidad * self.precio
+
+    descuento = models.FloatField(default=0)
+
+    # decorador
+    @property
+    def total(self):
+        return self.subtotal - self.descuento
+
+    # Para identificar el modelo
+    def __str__(self):
+        return "{}-{}-{}".format(self.id, self.cabecera, self.producto)
+
+    class Meta:
+        verbose_name_plural = "Detalles de Compras"
