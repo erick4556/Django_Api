@@ -11,6 +11,7 @@ from .models import (
     Proveedor,
     ComprasEnc,
     ComprasDet,
+    Cliente,
 )
 from .serializer import (
     DocumentoSerializer,
@@ -20,6 +21,7 @@ from .serializer import (
     ProveedorSerializer,
     ComprasDetSerializer,
     ComprasSerializer,
+    ClienteSerializer,
 )
 
 
@@ -67,3 +69,9 @@ class ComprasDetViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = ComprasDet.objects.all().order_by("id")
     serializer_class = ComprasDetSerializer
+
+
+class ClienteViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    queryset = Cliente.objects.all().order_by("nombre")
+    serializer_class = ClienteSerializer

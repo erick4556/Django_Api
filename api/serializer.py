@@ -8,6 +8,7 @@ from .models import (
     Proveedor,
     ComprasDet,
     ComprasEnc,
+    Cliente,
 )
 
 
@@ -78,3 +79,9 @@ class ComprasSerializer(serializers.ModelSerializer):
     class Meta:
         model = ComprasEnc
         fields = ["id", "proveedor", "fecha", "detalle"]
+
+
+class ClienteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cliente
+        fields = "__all__"
