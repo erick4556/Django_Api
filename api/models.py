@@ -158,6 +158,40 @@ class Cliente(models.Model):
         verbose_name_plural = "Clientes"
 
 
+class FacturaEnc(models.Model):
+    cliente = models.ForeignKey(Cliente, on_delete=models.RESTRICT)
+    fecha = models.DateField()
+    fc = models.DateTimeField(auto_now_add=True)
+    fm = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.id)
+
+    class Meta:
+        verbose_name_plural = "Encabezados de Factura"
+
+class FacturaDet(models.Model):
+   cabecera = models.ForeignKey(FacturaEnc,related_name="detalle",on_delete=models.CASCADE)
+   producto = models.ForeignKey(Producto,on_delete=models.RESTRICT)
+   cantidad = models.IntegerField(default=0)
+   precio = models.FloatField(default=0)
+
+   @property
+   def subtotal(self):
+       return self.cantidad * self.precio
+
+   descuento = models.FloatField(default=0)
+
+   @property
+   def total(self):
+        return self.subtotal - self.descuento
+
+   def __str__(self):
+        return '{}-{}'.format(self.cabecera,self.producto)
+   class Meta:
+        verbose_name_plural = "Detalles de Factura"
+           
+
 # Signals de Compra
 @receiver(post_save, sender=ComprasDet)  # Recibe la accion y el modelo a vigilar
 # instance tiene una instancia del registro que se esta modificando

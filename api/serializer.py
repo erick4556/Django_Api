@@ -9,6 +9,8 @@ from .models import (
     ComprasDet,
     ComprasEnc,
     Cliente,
+    FacturaEnc,
+    FacturaDet,
 )
 
 
@@ -85,3 +87,28 @@ class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cliente
         fields = "__all__"
+
+
+class FacturasDetSerializer(serializers.ModelSerializer):
+    producto_descripcion = serializers.ReadOnlyField(source="producto.descripcion")
+
+    class Meta:
+        model = FacturaDet
+        fields = [
+            "cabecera",
+            "id",
+            "producto",
+            "cantidad",
+            "precio",
+            "subtotal",
+            "descuento",
+            "producto_descripcion",
+        ]
+
+
+class FacturasSerializer(serializers.ModelSerializer):
+    detalle = FacturasDetSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = FacturaEnc
+        fields = ["id", "cliente", "fecha", "detalle"]

@@ -12,6 +12,8 @@ from .models import (
     ComprasEnc,
     ComprasDet,
     Cliente,
+    FacturaEnc,
+    FacturaDet,
 )
 from .serializer import (
     DocumentoSerializer,
@@ -22,6 +24,8 @@ from .serializer import (
     ComprasDetSerializer,
     ComprasSerializer,
     ClienteSerializer,
+    FacturasDetSerializer,
+    FacturasSerializer,
 )
 
 
@@ -75,3 +79,15 @@ class ClienteViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = Cliente.objects.all().order_by("nombre")
     serializer_class = ClienteSerializer
+
+
+class FacturasViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    queryset = FacturaEnc.objects.all().order_by("id")
+    serializer_class = ComprasDetSerializer
+
+
+class FacturasDetViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    queryset = FacturaDet.objects.all().order_by("id")
+    serializer_class = ComprasDetSerializer
