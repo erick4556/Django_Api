@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from rest_framework import viewsets
 from .models import (
@@ -76,18 +78,37 @@ class ComprasDetViewSet(viewsets.ModelViewSet):
 
 
 class ClienteViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     queryset = Cliente.objects.all().order_by("nombre")
     serializer_class = ClienteSerializer
+
+    @action(
+        methods=["get"],
+        detail=False,
+        permission_classes=[],
+        url_path="by-name/(?P<nombre>[\w\ ]+)",
+    )  # P significa una palabra que es nombre, va ser cualquier palabra y cualquier espacio en blanco. El + para que se pueda repetir varias veces
+    def by_name(self, request, pk=None, nombre=None):
+        print(nombre)
+        obj = Cliente.objects.filter(
+            nombre__icontains=nombre, estado=True
+        )  # __icontains insesitive case, que no distingue entre mayuscula y minuscula
+        if not obj:
+            return Response({"detail": "No existe cliente"})
+        else:
+            serializador = ClienteSerializer(
+                obj, many=True
+            )  # many=True por que puede devolver mas de un registro
+            return Response(serializador.data)
 
 
 class FacturasViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = FacturaEnc.objects.all().order_by("id")
-    serializer_class = ComprasDetSerializer
+    serializer_class = FacturasSerializer
 
 
 class FacturasDetViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = FacturaDet.objects.all().order_by("id")
-    serializer_class = ComprasDetSerializer
+    serializer_class = FacturasDetSerializer

@@ -184,10 +184,10 @@ class FacturaDet(models.Model):
 
    @property
    def total(self):
-        return self.subtotal - self.descuento
+       return self.subtotal - self.descuento
 
    def __str__(self):
-        return '{}-{}'.format(self.cabecera,self.producto)
+       return '{}-{}'.format(self.cabecera,self.producto)
    class Meta:
         verbose_name_plural = "Detalles de Factura"
            
