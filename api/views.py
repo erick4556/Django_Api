@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from .models import (
     Documento,
     Categoria,
@@ -112,3 +112,18 @@ class FacturasDetViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = FacturaDet.objects.all().order_by("id")
     serializer_class = FacturasDetSerializer
+    # action
+    def create(self, request):
+        serializer = FacturasDetSerializer(data=request.data)
+        if serializer.is_valid():
+            data = request.data
+            print(data)
+            prod = Producto.objects.get(pk=data["producto"])
+            if int(prod.existencia) >= int(data["cantidad"]):
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                print("No hay existencia suficiente")
+                return Response("No hay existencia suficiente")
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

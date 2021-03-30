@@ -170,27 +170,31 @@ class FacturaEnc(models.Model):
     class Meta:
         verbose_name_plural = "Encabezados de Factura"
 
+
 class FacturaDet(models.Model):
-   cabecera = models.ForeignKey(FacturaEnc,related_name="detalle",on_delete=models.CASCADE)
-   producto = models.ForeignKey(Producto,on_delete=models.RESTRICT)
-   cantidad = models.IntegerField(default=0)
-   precio = models.FloatField(default=0)
+    cabecera = models.ForeignKey(
+        FacturaEnc, related_name="detalle", on_delete=models.CASCADE
+    )
+    producto = models.ForeignKey(Producto, on_delete=models.RESTRICT)
+    cantidad = models.IntegerField(default=0)
+    precio = models.FloatField(default=0)
 
-   @property
-   def subtotal(self):
-       return self.cantidad * self.precio
+    @property
+    def subtotal(self):
+        return self.cantidad * self.precio
 
-   descuento = models.FloatField(default=0)
+    descuento = models.FloatField(default=0)
 
-   @property
-   def total(self):
-       return self.subtotal - self.descuento
+    @property
+    def total(self):
+        return self.subtotal - self.descuento
 
-   def __str__(self):
-       return '{}-{}'.format(self.cabecera,self.producto)
-   class Meta:
+    def __str__(self):
+        return "{}-{}".format(self.cabecera, self.producto)
+
+    class Meta:
         verbose_name_plural = "Detalles de Factura"
-           
+
 
 # Signals de Compra
 @receiver(post_save, sender=ComprasDet)  # Recibe la accion y el modelo a vigilar
@@ -210,4 +214,26 @@ def vigilar_eliminar_detalle_compra(sender, instance, **kwargs):
     prod = Producto.objects.filter(id=id_producto).first()
     if prod:
         prod.existencia -= int(instance.cantidad)
+        prod.save()
+
+
+# Signals de Facturacion
+@receiver(post_save, sender=FacturaDet)  # Recibe la accion y el modelo a vigilar
+# instance tiene una instancia del registro que se esta modificando
+def vigilar_guardar_detalle_factura(sender, instance, **kwargs):
+    id_producto = instance.producto.id
+
+    prod = Producto.objects.get(id=id_producto)
+    if prod:
+        prod.existencia = int(prod.existencia) - int(instance.cantidad)
+        prod.save()
+
+
+@receiver(post_delete, sender=FacturaDet)
+def vigilar_eliminar_detalle_factura(sender, instance, **kwargs):
+    id_producto = instance.producto.id
+
+    prod = Producto.objects.get(id=id_producto)
+    if prod:
+        prod.existencia = int(prod.existencia) + int(instance.cantidad)
         prod.save()
